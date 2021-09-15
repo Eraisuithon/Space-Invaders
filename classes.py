@@ -1,6 +1,5 @@
 import pygame
 from random import randint, choice
-import math
 
 '''
     wav files are downloaded from: https://github.com/attreyabhatt/Space-Invaders-Pygame
