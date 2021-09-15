@@ -191,7 +191,6 @@ class Game:
         iterations = 0
         running = True
         while running:
-            print((iterations+1)**(1/2))
             iterations += 1
             if iterations**(1/2) % 10 == 0:
                 enemy = Player(size=64, image='Enemy.png', change=3, change_y=40, window=self.window)
