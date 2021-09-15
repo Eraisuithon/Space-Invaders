@@ -178,7 +178,18 @@ class Game:
         self.score = Score(window=self.window)
 
     def end(self):
-        print('Game over!')
+        font = pygame.font.Font('freesansbold.ttf', 64)
+        over_text = font.render("GAME OVER", True, (255, 255, 255))
+        self.window.screen.blit(over_text, (200, 250))
+        pygame.display.update()
+
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        running = False
+
 
     def run(self):
         self.window.set_up()
