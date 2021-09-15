@@ -241,9 +241,9 @@ class Game:
                     if event.key == pygame.K_q:
                         self.end()
                         running = False
-                    if event.key == pygame.K_LEFT:
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         self.player.move[0] = -self.player.change
-                    if event.key == pygame.K_RIGHT:
+                    if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.player.move[0] = self.player.change
                     if event.key == pygame.K_SPACE and bullets_counter>self.bullet_countdown:
                         bullets_counter = 0
@@ -253,9 +253,9 @@ class Game:
                         self.bullets[-1].y_coordinate = self.player.y_coordinate - self.bullets[-1].size // 3
 
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT and self.player.move[0] < 0:
+                    if (event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.player.move[0] < 0:
                         self.player.move[0] = 0
-                    if event.key == pygame.K_RIGHT and self.player.move[0] > 0:
+                    if (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and self.player.move[0] > 0:
                         self.player.move[0] = 0
 
             self.bullets[:] = [bullet for bullet in self.bullets if not bullet.out_of_bounds()]
