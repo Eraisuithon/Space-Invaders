@@ -176,6 +176,7 @@ class Game:
         self.enemies = []
         self.bullets = []
         self.score = Score(window=self.window)
+        self.bullet_countdown = 25
 
     def display_end(self):
         font_game_over = pygame.font.Font('freesansbold.ttf', 64)
@@ -220,9 +221,11 @@ class Game:
             self.enemies.append(enemy)
 
         iterations = 0
+        bullets_counter = 0
         running = True
         while running:
             iterations += 1
+            bullets_counter += 1
             if iterations**(1/2) % 10 == 0:
                 enemy = Player(size=64, image='Enemy.png', change=3, change_y=40, window=self.window)
                 enemy.random_start()
@@ -242,7 +245,8 @@ class Game:
                         self.player.move[0] = -self.player.change
                     if event.key == pygame.K_RIGHT:
                         self.player.move[0] = self.player.change
-                    if event.key == pygame.K_SPACE:
+                    if event.key == pygame.K_SPACE and bullets_counter>self.bullet_countdown:
+                        bullets_counter = 0
                         self.bullets.append(Bullet(window=self.window))
                         self.bullets[-1].x_coordinate = self.player.x_coordinate + self.player.size // 2 - \
                                                         self.bullets[-1].size // 2
