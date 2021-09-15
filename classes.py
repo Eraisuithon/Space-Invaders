@@ -177,18 +177,38 @@ class Game:
         self.bullets = []
         self.score = Score(window=self.window)
 
-    def end(self):
-        font = pygame.font.Font('freesansbold.ttf', 64)
-        over_text = font.render("GAME OVER", True, (255, 255, 255))
-        self.window.screen.blit(over_text, (200, 250))
+    def display_end(self):
+        font_game_over = pygame.font.Font('freesansbold.ttf', 64)
+        game_over_text = font_game_over.render("GAME OVER", True, (255, 255, 255))
+        self.window.screen.blit(game_over_text, (200, 250))
+
+        font_quit_retry = pygame.font.Font('freesansbold.ttf', 16)
+        quit_text = font_quit_retry.render("To Quit Press Q", True, (255, 255, 255))
+        self.window.screen.blit(quit_text, (475, 325))
+
+        retry_text = font_quit_retry.render("To Play Again Press R", True, (255, 255, 255))
+        self.window.screen.blit(retry_text, (200, 325))
+
         pygame.display.update()
 
+    def end(self):
+        self.display_end()
+
+        retry = False
         running = True
         while running:
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         running = False
+                    if event.key == pygame.K_r:
+                        running = False
+                        retry = True
+        if retry:
+            self.__init__()
+            self.run()
 
 
     def run(self):
@@ -213,9 +233,11 @@ class Game:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.end()
                     running = False
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        self.end()
+                        running = False
                     if event.key == pygame.K_LEFT:
                         self.player.move[0] = -self.player.change
                     if event.key == pygame.K_RIGHT:
