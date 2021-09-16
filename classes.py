@@ -1,5 +1,8 @@
 import pygame
 from random import randint, choice
+import json
+import os
+from bisect import bisect
 
 '''
     wav files are downloaded from: https://github.com/attreyabhatt/Space-Invaders-Pygame
@@ -72,6 +75,7 @@ class Bullet(Entity):
         self.bullet_sound = pygame.mixer.Sound('laser.wav')
         self.bullet_sound.play()
         self.collision_sound = pygame.mixer.Sound('explosion.wav')
+        self.collision_sound.set_volume(.7)
 
     def play_collision_sound(self):
         self.collision_sound.play()
@@ -133,8 +137,16 @@ class Window:
         pygame.mixer.music.load('background.wav')
         pygame.mixer.music.play(-1)
 
+        self.create_file_if_it_does_not_exist()
+
     def __repr__(self):
         return f"Window({self.width=},{self.height=},{self.name=},{self.icon=})"
+
+    def create_file_if_it_does_not_exist(self):
+        if not os.path.exists('Scores.txt'):
+            with open('Scores.txt', 'w') as file:
+                json.dump([], file)
+
 
     def set_up(self):
         pygame.display.set_caption(self.name)
@@ -191,8 +203,24 @@ class Game:
 
         pygame.display.update()
 
+    def save_to_file(self, name):
+        with open('Scores.txt') as file:
+            data = json.load(file)
+        if data:
+            second_column = [data[i][1] for i in range(len(data))]
+            index = bisect(second_column, self.score.score)
+            data.insert(index, (name, self.score.score))
+            if len(data) > 10:
+                data.pop()
+        else:
+            data.append((name, self.score.score))
+        with open('Scores.txt', 'w') as file:
+            json.dump(data, file)
+
+
     def end(self):
         self.display_end()
+        self.save_to_file('Mike')
 
         retry = False
         running = True
@@ -210,7 +238,6 @@ class Game:
             self.__init__()
             self.run()
 
-
     def run(self):
         self.window.set_up()
 
@@ -225,7 +252,7 @@ class Game:
         while running:
             iterations += 1
             bullets_counter += 1
-            if iterations**(1/2) % 10 == 0:
+            if iterations ** (1 / 2) % 10 == 0:
                 enemy = Player(size=64, image='Enemy.png', change=3, change_y=40, window=self.window)
                 enemy.random_start()
                 self.enemies.append(enemy)
@@ -244,7 +271,7 @@ class Game:
                         self.player.move[0] = -self.player.change
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.player.move[0] = self.player.change
-                    if event.key == pygame.K_SPACE and bullets_counter>self.bullet_countdown:
+                    if event.key == pygame.K_SPACE and bullets_counter > self.bullet_countdown:
                         bullets_counter = 0
                         self.bullets.append(Bullet(window=self.window))
                         self.bullets[-1].x_coordinate = self.player.x_coordinate + self.player.size // 2 - \
