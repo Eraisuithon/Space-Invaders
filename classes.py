@@ -195,6 +195,7 @@ class Game:
         self.score = Score(window=self.window)
         self.bullet_countdown = 250
         self.clock = pygame.time.Clock()
+        self.freeze = False
 
     def start_over(self):
         self.__init__()
@@ -323,12 +324,16 @@ class Game:
         start_time = pygame.time.get_ticks()
         running = True
 
+        easteregg = ''
+
         # I subtract the cooldown so the first time can fire normally
         bullets_counter = pygame.time.get_ticks()-self.bullet_countdown
         while running:
             curr_time = pygame.time.get_ticks() - start_time
             if curr_time ** (1 / 2) % 50 == 0:
                 enemy = Player(size=64, image='Enemy.png', change=3, change_y=40, window=self.window)
+                if self.freeze:
+                    enemy.change = 0
                 enemy.random_start()
                 self.enemies.append(enemy)
 
@@ -355,6 +360,22 @@ class Game:
                                                         self.bullets[-1].size // 2
                         self.bullets[-1].y_coordinate = self.player.y_coordinate - self.bullets[-1].size // 3
 
+                    if event.key == pygame.K_BACKSPACE:
+                        easteregg = easteregg[:-1]
+                    elif event.key != pygame.K_RETURN:
+                        easteregg += event.unicode
+                    if event.key == pygame.K_RETURN and easteregg.lower()=='big pie':
+                        self.score.score = 314159265358979323846264338327950288
+                        self.end()
+                        running = False
+                    if event.key == pygame.K_RETURN and easteregg.lower()  == 'freeze':
+                        self.freeze = True
+                        for enemy in self.enemies:
+                            enemy.change = 0
+                        easteregg = ''
+
+
+
                 if event.type == pygame.KEYUP:
                     if (event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.player.move[0] < 0:
                         self.player.move[0] = 0
@@ -374,6 +395,8 @@ class Game:
                 for _ in range(score):
                     enemy = Player(size=64, image='Enemy.png', change=3 + (self.score.score * 0.01), change_y=40,
                                    window=self.window)
+                    if self.freeze:
+                        enemy.change = 0
                     enemy.random_start()
                     self.enemies.append(enemy)
 
