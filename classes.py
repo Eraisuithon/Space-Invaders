@@ -193,7 +193,7 @@ class Game:
         self.enemies = []
         self.bullets = []
         self.score = Score(window=self.window)
-        self.bullet_countdown = 25
+        self.bullet_countdown = 250
         self.clock = pygame.time.Clock()
 
     def start_over(self):
@@ -321,11 +321,12 @@ class Game:
             self.enemies.append(enemy)
 
         start_time = pygame.time.get_ticks()
-        bullets_counter = 0
         running = True
+
+        # I subtract the cooldown so the first time can fire normally
+        bullets_counter = pygame.time.get_ticks()-self.bullet_countdown
         while running:
             curr_time = pygame.time.get_ticks() - start_time
-            bullets_counter += 1
             if curr_time ** (1 / 2) % 50 == 0:
                 enemy = Player(size=64, image='Enemy.png', change=3, change_y=40, window=self.window)
                 enemy.random_start()
@@ -346,8 +347,9 @@ class Game:
                         self.player.move[0] = -self.player.change
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.player.move[0] = self.player.change
-                    if event.key == pygame.K_SPACE and bullets_counter > self.bullet_countdown:
-                        bullets_counter = 0
+
+                    if event.key == pygame.K_SPACE and curr_time - bullets_counter > self.bullet_countdown:
+                        bullets_counter = pygame.time.get_ticks()
                         self.bullets.append(Bullet(window=self.window))
                         self.bullets[-1].x_coordinate = self.player.x_coordinate + self.player.size // 2 - \
                                                         self.bullets[-1].size // 2
