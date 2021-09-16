@@ -267,7 +267,7 @@ class Game:
                 self.enemies[:] = [enemy for enemy in self.enemies if not bullet.did_collide(enemy)]
                 score = previous_enemies - len(self.enemies)
                 self.score.score += score
-                for i in range(score):
+                for _ in range(score):
                     enemy = Player(size=64, image='Enemy.png', change=3 + (self.score.score * 0.01), change_y=40,
                                    window=self.window)
                     enemy.random_start()
