@@ -147,6 +147,10 @@ class Window:
         if not os.path.exists('Scores.txt'):
             with open('Scores.txt', 'w') as file:
                 json.dump([], file)
+                return
+        if os.stat('Scores.txt').st_size == 0:
+            with open('Scores.txt', 'w') as file:
+                json.dump([], file)
 
     def set_up(self):
         pygame.display.set_caption(self.name)
