@@ -277,8 +277,11 @@ class Game:
                     pygame.quit()
                     exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_r:
                         return
+                    if event.key == pygame.K_q:
+                        pygame.quit()
+                        exit()
 
 
     def end(self):
