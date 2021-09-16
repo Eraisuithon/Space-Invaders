@@ -253,7 +253,7 @@ class Game:
         while running:
             curr_time = pygame.time.get_ticks()-start_time
             bullets_counter += 1
-            if curr_time ** (1 / 2) % 100 == 0:
+            if curr_time ** (1 / 2) % 50 == 0:
                 enemy = Player(size=64, image='Enemy.png', change=3, change_y=40, window=self.window)
                 enemy.random_start()
                 self.enemies.append(enemy)
