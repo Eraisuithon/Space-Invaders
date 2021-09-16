@@ -57,7 +57,7 @@ class Score(Entity):
         super().__init__(size=None, change=0, window=window)
 
         # download any font from dafont.com
-        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.font = self.window.base_font(32)
         self.x_coordinate = 10
         self.y_coordinate = 10
         self.score = 0
@@ -129,6 +129,7 @@ class Window:
             self.background = pygame.image.load(image)
         if icon is not None:
             self.icon = pygame.image.load(icon)
+        self.base_font = lambda x: pygame.font.Font('freesansbold.ttf', x)
 
         self.name = name
         self.width = width
@@ -191,11 +192,11 @@ class Game:
         self.clock  = pygame.time.Clock()
 
     def display_end(self):
-        font_game_over = pygame.font.Font('freesansbold.ttf', 64)
+        font_game_over = self.window.base_font(64)
         game_over_text = font_game_over.render("GAME OVER", True, (255, 255, 255))
         self.window.screen.blit(game_over_text, (200, 250))
 
-        font_quit_retry = pygame.font.Font('freesansbold.ttf', 16)
+        font_quit_retry = self.window.base_font(16)
         quit_text = font_quit_retry.render("To Quit Press Q", True, (255, 255, 255))
         self.window.screen.blit(quit_text, (475, 325))
 
