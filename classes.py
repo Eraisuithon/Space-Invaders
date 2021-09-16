@@ -139,7 +139,6 @@ class Window:
         pygame.mixer.music.load('background.wav')
         pygame.mixer.music.play(-1)
 
-
     def __repr__(self):
         return f"Window({self.width=},{self.height=},{self.name=},{self.icon=})"
 
@@ -284,7 +283,6 @@ class Game:
                         pygame.quit()
                         exit()
 
-
     def end(self):
         self.display_end()
 
@@ -327,7 +325,7 @@ class Game:
         easteregg = ''
 
         # I subtract the cooldown so the first time can fire normally
-        bullets_counter = pygame.time.get_ticks()-self.bullet_countdown
+        bullets_counter = pygame.time.get_ticks() - self.bullet_countdown
         while running:
             curr_time = pygame.time.get_ticks() - start_time
             if curr_time ** (1 / 2) % 50 == 0:
@@ -364,18 +362,16 @@ class Game:
                         easteregg = easteregg[:-1]
                     elif event.key != pygame.K_RETURN:
                         easteregg += event.unicode
-                    if event.key == pygame.K_RETURN and easteregg.lower()=='big pie':
+                    if event.key == pygame.K_RETURN and (easteregg == 'big pie' or easteregg =='βιγ πιε'):
                         self.score.score = 314159265358979323846264338327950288
                         self.end()
                         running = False
-                    if event.key == pygame.K_RETURN and easteregg.lower()  == 'freeze':
+                    if event.key == pygame.K_RETURN and (easteregg.lower() == 'freeze' or easteregg == 'φρεεζε'):
                         self.freeze = True
                         for enemy in self.enemies:
                             enemy.change = 0
                     if event.key == pygame.K_RETURN:
                         easteregg = ''
-
-
 
                 if event.type == pygame.KEYUP:
                     if (event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.player.move[0] < 0:
