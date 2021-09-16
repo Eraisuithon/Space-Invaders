@@ -372,6 +372,7 @@ class Game:
                         self.freeze = True
                         for enemy in self.enemies:
                             enemy.change = 0
+                    if event.key == pygame.K_RETURN:
                         easteregg = ''
 
 
