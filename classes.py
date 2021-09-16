@@ -192,6 +192,8 @@ class Game:
         self.clock  = pygame.time.Clock()
 
     def display_end(self):
+        self.window.draw_background()
+
         font_game_over = self.window.base_font(64)
         game_over_text = font_game_over.render("GAME OVER", True, (255, 255, 255))
         self.window.screen.blit(game_over_text, (200, 250))
@@ -319,5 +321,6 @@ class Game:
                 self.end()
                 running = False
 
-            pygame.display.update()
+            if running:
+                pygame.display.update()
             self.clock.tick(120)
