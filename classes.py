@@ -192,7 +192,7 @@ class Game:
         self.enemies = []
         self.bullets = []
         self.score = Score(window=self.window)
-        self.bullet_countdown = 250
+        self.bullet_countdown = 500
         self.clock = pygame.time.Clock()
         self.freeze = False
 
@@ -351,8 +351,6 @@ class Game:
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.player.move[0] = self.player.change
 
-                    print(f'{bullets_counter=}')
-                    print(f'{curr_time=}')
                     if event.key == pygame.K_SPACE and curr_time - bullets_counter > self.bullet_countdown:
                         bullets_counter = curr_time
                         self.bullets.append(Bullet(window=self.window))
