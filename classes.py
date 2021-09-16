@@ -188,6 +188,7 @@ class Game:
         self.bullets = []
         self.score = Score(window=self.window)
         self.bullet_countdown = 25
+        self.clock  = pygame.time.Clock()
 
     def display_end(self):
         font_game_over = pygame.font.Font('freesansbold.ttf', 64)
@@ -246,13 +247,13 @@ class Game:
             enemy.random_start()
             self.enemies.append(enemy)
 
-        iterations = 0
+        start_time = pygame.time.get_ticks()
         bullets_counter = 0
         running = True
         while running:
-            iterations += 1
+            curr_time = pygame.time.get_ticks()-start_time
             bullets_counter += 1
-            if iterations ** (1 / 2) % 10 == 0:
+            if curr_time ** (1 / 2) % 100 == 0:
                 enemy = Player(size=64, image='Enemy.png', change=3, change_y=40, window=self.window)
                 enemy.random_start()
                 self.enemies.append(enemy)
@@ -318,3 +319,4 @@ class Game:
                 running = False
 
             pygame.display.update()
+            self.clock.tick(120)
