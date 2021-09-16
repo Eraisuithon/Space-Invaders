@@ -139,7 +139,6 @@ class Window:
         pygame.mixer.music.load('background.wav')
         pygame.mixer.music.play(-1)
 
-        self.create_file_if_it_does_not_exist()
 
     def __repr__(self):
         return f"Window({self.width=},{self.height=},{self.name=},{self.icon=})"
@@ -182,6 +181,8 @@ class Game:
     def __init__(self):
         pygame.init()
         self.window = Window(width=800, height=600, image='background.png', name='Space Invaders', icon='ufo.png')
+
+        self.window.create_file_if_it_does_not_exist()
 
         self.player = Player(size=64, image='player.png', change=4, window=self.window)
         self.player.player_start()
@@ -243,9 +244,11 @@ class Game:
         with open('Scores.txt') as file:
             data = json.load(file)
         if data:
+            data.reverse()
             second_column = [data[i][1] for i in range(len(data))]
             index = bisect(second_column, self.score.score)
             data.insert(index, (name, self.score.score))
+            data.reverse()
             if len(data) > 10:
                 data.pop()
         else:
