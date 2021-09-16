@@ -3,6 +3,7 @@ from random import randint, choice
 import json
 import os
 from bisect import bisect
+from sys import exit
 
 '''
     wav files are downloaded from: https://github.com/attreyabhatt/Space-Invaders-Pygame
@@ -148,7 +149,6 @@ class Window:
             with open('Scores.txt', 'w') as file:
                 json.dump([], file)
 
-
     def set_up(self):
         pygame.display.set_caption(self.name)
         pygame.display.set_icon(self.icon)
@@ -189,7 +189,36 @@ class Game:
         self.bullets = []
         self.score = Score(window=self.window)
         self.bullet_countdown = 25
-        self.clock  = pygame.time.Clock()
+        self.clock = pygame.time.Clock()
+
+    def start_over(self):
+        self.__init__()
+        self.run()
+
+    def add_name(self):
+        user_text = ''
+        running = True
+        while running:
+            self.window.draw_background()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        user_text = user_text[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        if user_text:
+                            self.save_to_file(user_text)
+                            return
+                    else:
+                        user_text += event.unicode
+
+            text_surface = self.window.base_font(32).render(f"Name: {user_text}", True, (255, 255, 255))
+            self.window.screen.blit(text_surface, (0, 0))
+
+            pygame.display.update()
 
     def display_end(self):
         self.window.draw_background()
@@ -198,12 +227,15 @@ class Game:
         game_over_text = font_game_over.render("GAME OVER", True, (255, 255, 255))
         self.window.screen.blit(game_over_text, (200, 250))
 
-        font_quit_retry = self.window.base_font(16)
-        quit_text = font_quit_retry.render("To Quit Press Q", True, (255, 255, 255))
+        font_quit_retry_score = self.window.base_font(16)
+        quit_text = font_quit_retry_score.render("To Quit Press Q", True, (255, 255, 255))
         self.window.screen.blit(quit_text, (475, 325))
 
-        retry_text = font_quit_retry.render("To Play Again Press R", True, (255, 255, 255))
+        retry_text = font_quit_retry_score.render("To Play Again Press R", True, (255, 255, 255))
         self.window.screen.blit(retry_text, (200, 325))
+
+        score_text = font_quit_retry_score.render("To Add Your Score Press S", True, (255, 255, 255))
+        self.window.screen.blit(score_text, (200, 350))
 
         pygame.display.update()
 
@@ -221,26 +253,54 @@ class Game:
         with open('Scores.txt', 'w') as file:
             json.dump(data, file)
 
+    def display_scores(self):
+        with open('Scores.txt') as file:
+            data = json.load(file)
+
+        text_font = self.window.base_font(32)
+        for i, name_score in enumerate(data):
+            text = text_font.render(f"{name_score[0]} : {name_score[1]}", True, (255, 255, 255))
+            self.window.screen.blit(text, (0, i * 50))
+
+        pygame.display.update()
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        return
+
 
     def end(self):
         self.display_end()
-        self.save_to_file('Mike')
 
+        score = False
         retry = False
         running = True
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    pygame.quit()
+                    exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
-                        running = False
+                        pygame.quit()
+                        exit()
                     if event.key == pygame.K_r:
                         running = False
                         retry = True
-        if retry:
-            self.__init__()
-            self.run()
+                    if event.key == pygame.K_s:
+                        running = False
+                        score = True
+        if score:
+            self.add_name()
+            self.display_scores()
+            self.start_over()
+        elif retry:
+            self.start_over()
 
     def run(self):
         self.window.set_up()
@@ -254,7 +314,7 @@ class Game:
         bullets_counter = 0
         running = True
         while running:
-            curr_time = pygame.time.get_ticks()-start_time
+            curr_time = pygame.time.get_ticks() - start_time
             bullets_counter += 1
             if curr_time ** (1 / 2) % 50 == 0:
                 enemy = Player(size=64, image='Enemy.png', change=3, change_y=40, window=self.window)
@@ -266,7 +326,8 @@ class Game:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    pygame.quit()
+                    exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         self.end()
