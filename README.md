@@ -6,7 +6,7 @@ This project was built as an exercise to learn pygame.
 
 ---
 
-# Originally Inspired Disclaimer
+## Originally Inspired Disclaimer
 
 The way this project looks was inspired by the tutorial of github user attreyabhatt.
 
