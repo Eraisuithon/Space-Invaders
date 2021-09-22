@@ -351,8 +351,6 @@ class Game:
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.player.move[0] = self.player.change
 
-                    print(f'{curr_time=}')
-                    print(f'{bullets_counter=}')
                     if event.key == pygame.K_SPACE and curr_time - bullets_counter > self.bullet_countdown:
                         bullets_counter = curr_time
                         self.bullets.append(Bullet(window=self.window))
