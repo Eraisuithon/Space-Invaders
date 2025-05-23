@@ -18,7 +18,7 @@ Hope you enjoy my game 🕹️ 👾 👽
 
 ---
 
-### Originally Inspired Disclaimer
+### Disclaimer
 
 The way this project looks was inspired by the tutorial of github user attreyabhatt.
 
